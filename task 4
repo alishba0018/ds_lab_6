@@ -1,0 +1,140 @@
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <stack>
+using namespace std;
+
+struct Node{
+    char data;
+    Node *next;
+    Node(char d){
+        data=d;
+        next=NULL;
+    }
+};
+
+struct Stack {
+    Node* top;
+    Stack() { top = NULL; }
+};
+
+void create(Stack* s) {
+    s->top = NULL;
+}
+
+void push(Stack* s,char x){
+    Node *t = new Node(x); // directly store x
+    if(!t){ cout<<"stack overflow"; return; }
+    t->next = s->top;
+    s->top = t;
+}
+
+char pop(Stack* s){
+    if(!s->top){ cout<<"stack underflow"; return -1; }
+    Node* t = s->top;
+    char x = t->data;
+    s->top = s->top->next;
+    delete t;
+    return x;
+}
+
+char stackTop(Stack *s){
+    if(s->top != NULL) return s->top->data;
+    else return -1;
+}
+
+bool isEmpty(Stack *s){
+    return s->top == NULL;
+}
+
+void displayll(Stack *s){
+    Node *p = s->top;
+    while(p){
+        cout << p->data;
+        p = p->next;
+    }
+    cout << endl;
+}
+
+int precedence(char x){
+    if(x=='=') return 0;
+    else if(x=='*' || x=='/') return 2;
+    else if(x=='+' || x=='-') return 1;
+    else return -1;
+}
+
+string convert(string expr){
+    Stack temp;
+    create(&temp);
+    string postfix="";
+    int i=2; // ignore x=
+    while(i < expr.length()){
+        if(isdigit(expr[i]) || expr[i] == '.'){
+            string number="";
+            while(i<expr.length() && (isdigit(expr[i]) || expr[i]=='.')){
+                number += expr[i];
+                i++;
+            }
+            postfix += number + " ";
+        }
+        else if(expr[i]=='('){
+            push(&temp, expr[i]);
+            i++;
+        }
+        else if(expr[i]==')'){
+            while(!isEmpty(&temp) && stackTop(&temp) != '(')
+                postfix += pop(&temp);
+            pop(&temp); // remove '('
+            i++;
+        }
+        else{ // operator
+            while(!isEmpty(&temp) && precedence(expr[i]) <= precedence(stackTop(&temp))){
+                postfix += pop(&temp);
+            }
+            push(&temp, expr[i]);
+            i++;
+        }
+    }
+    while(!isEmpty(&temp)) postfix += pop(&temp);
+    return postfix;
+}
+
+double evaluate(string postfix){
+    stack<double> st; // using stack here for evaluation
+    istringstream iss(postfix);
+    string token;
+    while(iss >> token){
+        if(isdigit(token[0]) || token[0]=='.'){
+            st.push(stod(token));
+        }
+        else{
+            double b = st.top(); st.pop();
+            double a = st.top(); st.pop();
+            if(token == "+") st.push(a+b);
+            else if(token == "-") st.push(a-b);
+            else if(token == "*") st.push(a*b);
+            else if(token == "/") st.push(a/b);
+        }
+    }
+    return st.top();
+}
+
+int main(){
+    string expr="x=12+13-5*(0.5+0.5)+1"; // added multiplication *
+    Stack s;
+    create(&s);
+    for(int i=2;i<expr.length();i++){
+        push(&s, expr[i]);
+    }
+    cout << "Stack before conversion: ";
+    displayll(&s);
+
+    string postfix = convert(expr);
+    cout << "Postfix: " << postfix << endl;
+
+    double result = evaluate(postfix);
+    cout << "Result: " << result << endl;
+
+    return 0;
+}
