@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node{
+    string data;
+    Node *next;
+    Node(string d){
+        data=d;
+        next=NULL;
+    }
+};
+
+struct Stack {
+    Node* top;
+    Stack() { top = NULL; }
+};
+
+
+void create(Stack* s) {
+    s->top = NULL;
+}
+
+
+void push(Stack* s,string x){
+    Node *t=new Node(x);
+    if(t==NULL){cout<<"stack overflow";}
+    else{
+        t->data=x;
+        t->next=s->top;
+        s->top=t;
+    }
+}
+
+string pop(Stack* s){
+   Node *t;
+   string x="";
+   if(s->top==NULL){cout<<"stack underflow";}
+   else{
+       t=s->top;
+       s->top=s->top->next;
+       x=t->data;
+       delete t;
+   }
+   return x;
+}   
+   
+string stackTop(Stack *s){
+    if(s->top!=NULL){
+        return s->top->data;
+    }
+    else{
+        return NULL;
+    }}
+    
+bool isFull(Stack *s){
+    Node *t=new Node(0);
+    if(t==NULL){return true;}
+    else{return false;}
+}
+    
+bool isEmpty(Stack *s){
+    if(s->top==NULL){
+        return true;
+    }
+    else{
+        return false;}
+}
+
+void displayll(struct Stack *s){
+    Node *p=s->top;
+    while(p!=NULL){
+        cout<<p->data;
+        p=p->next;
+    }
+}
+
+int main(){
+    struct Stack s;
+    create(&s);
+    cout<<"Empty? "<<isEmpty(&s);
+    cout<<"\nTO DO LIST: \n";
+     push(&s,"1. ds lab tasks \n");
+     push(&s,"2. pai assignment \n");
+     push(&s,"3. coal quiz \n");
+    displayll(&s);
+    cout<<"removing the top item from the stack..\n";
+    pop(&s);
+    cout<<"NEW TO DO LIST: \n";
+    displayll(&s);
+    return 0;
+}
