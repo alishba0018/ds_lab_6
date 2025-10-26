@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+
+class Queue{
+    int size;
+    int front;
+    int rear;
+    string *q;
+    public:
+    Queue(int size){
+        this->size=size;
+        front=rear=-1;
+        q=new string[this->size];
+    }
+    void enqueue(string x);
+    string dequeue();
+    void display();
+};
+
+void Queue :: enqueue(string x){
+    if(rear==size-1){cout<<"queue is full";}
+    else{
+        rear++;
+        q[rear]=x;
+    }
+}
+
+string Queue :: dequeue(){
+    string x="";
+    if(rear==front){cout<<"queue is empty";}
+    else{
+        front++;
+        x=q[front];
+    }
+    return x;
+}
+
+void Queue :: display(){
+    if(rear==front){cout<<"queue is empty";}
+    for(int i=front+1;i<=rear;i++){
+        cout<<q[i]<<endl;
+    }
+    cout<<"\n";
+}
+
+int main() {
+    int size;
+    cout<<"enter size of the queue: ";
+    cin>>size;
+    Queue Q(size);
+    Q.enqueue("Hello");
+    Q.enqueue("How are you?");
+    Q.enqueue("I am fine");
+    Q.display();
+    cout<<"the deleted message is: "<<Q.dequeue()<<endl;
+    Q.display();
+    return 0;
+}
