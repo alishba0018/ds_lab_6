@@ -1,0 +1,80 @@
+#include <iostream>
+using namespace std;
+
+class Queue{
+    int size;
+    int front;
+    int rear;
+    string *q;
+    public:
+    Queue(int size){
+        this->size=size;
+        front=rear=-1;
+        q=new string[this->size];
+    }
+    void enqueue(string x);
+    string dequeue();
+    void display();
+};
+
+void Queue :: enqueue(string x){
+    if(rear==size-1){cout<<"queue is full";}
+    else{
+        rear++;
+        q[rear]=x;
+    }
+}
+
+string Queue :: dequeue(){
+    string x="";
+    if(rear==front){cout<<"queue is empty";}
+    else{
+        front++;
+        x=q[front];
+    }
+    return x;
+}
+
+void Queue :: display(){
+    if(rear==front){cout<<"queue is empty";}
+    for(int i=front+1;i<=rear;i++){
+        cout<<q[i]<<endl;
+    }
+    cout<<"\n";
+}
+
+int main() {
+    int size;
+    int choice;
+    string name;
+    cout<<"enter size of the queue: ";
+    cin>>size;
+    Queue Q(size);
+    while(true){
+    cout<<"Library System:"<<endl;
+    cout<<"1. Add Patron"<<endl;
+    cout<<"2. Remove Patron"<<endl;
+    cout<<"3. Display"<<endl;
+    cout<<"4. Exit"<<endl;
+    cout<<"Enter your choice(1/2/3/4): ";
+    cin>>choice;
+    switch(choice){
+        case 1:
+        cout<<"Enter Patron's Name: ";
+        cin>>name;
+        Q.enqueue(name);
+        break;
+        case 2:
+        Q.dequeue();
+        break;
+        case 3:
+        Q.display();
+        break;
+        case 4:
+        cout<<"Exiting!"<<endl;
+        return 0;
+        default:
+        cout<<"invalid choice!"<<endl;
+    }}
+    return 0;
+}
